@@ -1,4 +1,4 @@
-package com.assignment_two_starter.model;
+package com.assignment_two_starter.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;

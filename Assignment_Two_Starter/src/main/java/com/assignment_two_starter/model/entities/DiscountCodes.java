@@ -1,7 +1,6 @@
-package com.assignment_two_starter.model;
+package com.assignment_two_starter.model.entities;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import jakarta.persistence.*;
 import lombok.Data;
