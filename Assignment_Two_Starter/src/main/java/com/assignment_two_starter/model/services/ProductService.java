@@ -15,7 +15,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product getproductById(Integer id) {
+    public Product getProductById(Integer id) {
         Optional<Product> c = productRepository.findById(id);
         if(c.isPresent())
             return c.get();
@@ -23,15 +23,15 @@ public class ProductService {
             return null;
     }
 
-    public List<Product> getAllproducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public void createproduct(Product product) {
+    public void createProduct(Product product) {
         productRepository.save(product);
     }
 
-    public void deleteproduct(Product product) {
+    public void deleteProduct(Product product) {
         productRepository.delete(product);
     }
 }
