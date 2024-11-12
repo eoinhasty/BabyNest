@@ -1,5 +1,8 @@
 package com.assignment_two_starter.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -51,18 +54,22 @@ public class Product implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @ToString.Exclude
     private List<Review> reviewList;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
     @ToString.Exclude
     private List<CartItem> cartItemList;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @ToString.Exclude
     private List<OrderItems> orderItemsList;
 
+    @JsonManagedReference
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     @ManyToOne
     @ToString.Exclude

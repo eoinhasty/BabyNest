@@ -3,6 +3,9 @@ package com.assignment_two_starter.model.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -34,9 +37,8 @@ public class Category implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "category")
     @ToString.Exclude
     private List<Product> productList;
-
-
 }

@@ -1,5 +1,7 @@
 package com.assignment_two_starter.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -37,11 +39,13 @@ public class Review implements Serializable {
     @Column(name = "approved")
     private Boolean approved;
 
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
     private Customer customer;
 
+    @JsonBackReference
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
