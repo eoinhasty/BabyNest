@@ -1,6 +1,5 @@
 package com.assignment_two_starter.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -74,5 +73,4 @@ public class Product implements Serializable {
     @ManyToOne
     @ToString.Exclude
     private Category category;
-
 }
