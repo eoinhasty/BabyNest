@@ -62,23 +62,47 @@ function ProductDrilldown() {
     return (
         <div>
             <div className="product">
-                <Carousel
-                    responsive={responsive}
-                    itemClass="carousel-item-padding-40-px"
-                    infinite={true}
-                    showDots={true}
-                >
-                    {imageList && imageList.map((image, index) => (
-                        <div style={{display: "flex", justifyContent: "center"}}>
-                            <img
-                                key={index}
-                                src={`http://localhost:8888/assets/images/large/${product.productId}/${image}`}
-                                alt={product.name}
-                                style={{width: "300px", height: "300px"}}
-                            ></img>
+                <div className={"carousel-container"}>
+                    {imageList.length > 2 ? (
+                        <Carousel
+                            responsive={responsive}
+                            itemClass="carousel-item-padding-40-px"
+                            infinite={true}
+                            showDots={true}
+                        >
+                            {imageList.map((image, index) => (
+                                <div key={index} style={{display: "flex", justifyContent: "center"}}>
+                                    <img
+                                        src={`http://localhost:8888/assets/images/large/${product.productId}/${image}`}
+                                        alt={product.name}
+                                        style={{width: "300px", height: "300px"}}
+                                    />
+                                </div>
+                            ))}
+                        </Carousel>
+                    ) : imageList.length === 2 ? (
+                        <div style={{display: "flex", justifyContent: "center", marginBottom: "30px", gap: "20px"}}>
+                            {imageList.map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={`http://localhost:8888/assets/images/large/${product.productId}/${image}`}
+                                    alt={product.name}
+                                    style={{width: "300px", height: "300px", borderRadius: "10px"}}
+                                />
+                            ))}
                         </div>
-                    ))}
-                </Carousel>
+                    ) : imageList.length === 1 ? (
+                        <div style={{display: "flex", justifyContent: "center", marginBottom: "30px"}}>
+                            <img
+                                src={`http://localhost:8888/assets/images/large/${product.productId}/${imageList[0]}`}
+                                alt={product.name}
+                                style={{width: "300px", height: "300px", borderRadius: "10px"}}
+                            />
+                        </div>
+                    ) : (
+                        <p>No images available</p>
+                    )}
+                </div>
 
                 <h2>{product.name}</h2>
                 <p>{product.description}</p>
@@ -112,7 +136,8 @@ function ProductDrilldown() {
                 )}
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default ProductDrilldown;
