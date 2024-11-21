@@ -73,14 +73,14 @@ function AllProducts() {
     }
 
     const columns = [
-        { data: "name", title: "Name" },
-        { data: "description", title: "Description" },
+        {data: "name", title: "Name"},
+        {data: "description", title: "Description"},
         {
             data: null,
             title: "Price",
             render: data => formatPrice(data.price),
         },
-        { data: "category.name", title: "Category" },
+        {data: "category.name", title: "Category"},
         {
             data: null,
             title: "Image",
@@ -98,39 +98,42 @@ function AllProducts() {
     //Render the component
     return (
         <div className={"App"}>
-            <form>
-                <div className={"input-wrapper"}>
-                    <label htmlFor={"minPrice"}>Min Price:</label>
+            <form className="all-products-form">
+                <div className="all-products-input-wrapper">
+                    <label htmlFor="minPrice">Min Price:</label>
                     <input
-                        type={"number"}
-                        id={"minPrice"}
-                        name={"minPrice"}
-                        value={minPrice === 0 ? "" : minPrice}
+                        type="number"
+                        id="minPrice"
+                        name="minPrice"
+                        value={minPrice === 0 ? "" : minPrice.toFixed(2)}
                         step={0.5}
                         onChange={(minPriceInput) => setMinPrice(parseFloat(minPriceInput.target.value) || 0)}
+                        onBlur={(e) => setMinPrice(parseFloat(e.target.value).toFixed(2))}
                     />
                 </div>
 
-                <div className={"input-wrapper"}>
-                    <label htmlFor={"maxPrice"}>Max Price:</label>
+                <div className="all-products-input-wrapper">
+                    <label htmlFor="maxPrice">Max Price:</label>
                     <input
-                        type={"number"}
-                        id={"maxPrice"}
-                        name={"maxPrice"}
-                        value={maxPrice === Infinity ? "" : maxPrice}
+                        type="number"
+                        id="maxPrice"
+                        name="maxPrice"
+                        value={maxPrice === Infinity ? "" : maxPrice.toFixed(2)}
+                        step={0.5}
                         onChange={(maxPriceInput) => setMaxPrice(parseFloat(maxPriceInput.target.value) || Infinity)}
+                        onBlur={(e) => setMaxPrice(parseFloat(e.target.value).toFixed(2))}
                     />
                 </div>
 
-                <div className={"input-wrapper"}>
-                    <label htmlFor={"category"}>Category:</label>
+                <div className="all-products-input-wrapper">
+                    <label htmlFor="category">Category:</label>
                     <select
-                        id={"category"}
-                        name={"category"}
+                        id="category"
+                        name="category"
                         value={selectedCategory}
                         onChange={(categoryInput) => setSelectedCategory(categoryInput.target.value)}
                     >
-                        <option value={"All"}>All</option>
+                        <option value="All">All</option>
                         {categories.map((category) => (
                             <option key={category.categoryId} value={category.name}>
                                 {category.name}
@@ -148,19 +151,19 @@ function AllProducts() {
                     paging: true,
                     searching: true,
                     ordering: false,
-            }}>
+                }}>
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Image</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Image</th>
+                </tr>
                 </thead>
             </DataTable>
         </div>
-    )
+    );
 }
 
 // <table id={"products"} className={"display"}>
