@@ -1,23 +1,36 @@
 package com.assignment_two_starter.model.services;
 
+import com.assignment_two_starter.model.entities.Role;
 import com.assignment_two_starter.model.repository.CustomerRepository;
 import com.assignment_two_starter.model.entities.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
-public class CustomerService {
+public class CustomerService implements UserDetailsService {
+
     private final CustomerRepository customerRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Customer getCustomerById(Integer id) {
         Optional<Customer> c = customerRepository.findById(id);
-        if(c.isPresent())
+        if (c.isPresent())
             return c.get();
         else
             return null;
@@ -27,12 +40,55 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public void createCustomer(Customer customer) {
-        customerRepository.save(customer);
-    }
-
     public void deleteCustomer(Customer customer) {
         customerRepository.delete(customer);
     }
+
+    public Customer registerCustomer(Customer customer) {
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+        customer.setCreatedAt(new Date());
+        customer.setUpdatedAt(new Date());
+        return customerRepository.save(customer);
+    }
+
+    public boolean emailExists(String email) {
+        return customerRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        List<GrantedAuthority> authorities = customer.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .collect(Collectors.toList());
+
+        System.out.println("Granted authorities: " + authorities);
+
+        return new org.springframework.security.core.userdetails.User(
+                customer.getEmail(),
+                customer.getPassword(),
+                true,
+                true,
+                true,
+                true,
+                authorities
+        );
+    }
+
+    /*
+    This method converts a set of Role objects into a collection of GrantedAuthority
+    objects prefixed with "ROLE_" for use in authorisation.
+    */
+    private Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roles) {
+        Set<GrantedAuthority> authorities = new HashSet();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+
+        }
+        return authorities;
+    }
+
 }
 
