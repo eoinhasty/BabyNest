@@ -125,7 +125,7 @@ function ProductDrilldown() {
                     <ul>
                         {approvedReviews.map((review, index) => (
                             <li key={index}>
-                                <p>Rating: {review.rating}/5</p>
+                                <p>Rating: {review.rating}/5 ★</p>
                                 <p>Review Date: {formatDate(review.createdAt.Date)}</p>
                                 <p>{review.reviewText}</p>
                             </li>
