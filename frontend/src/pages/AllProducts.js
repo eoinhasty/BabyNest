@@ -38,14 +38,17 @@ function AllProducts() {
             const filtered = products.filter((product) => {
                 const price = parseFloat(product.price) || 0;
 
+                const min = parseFloat(minPrice) || 0;
+                const max = parseFloat(maxPrice) || Infinity;
+
                 switch (selectedCategory) {
                     case "All":
-                        return price >= minPrice && price <= maxPrice;
+                        return price >= min && price <= max;
                     default:
                         return product.category &&
                             product.category.name === selectedCategory &&
-                            price >= minPrice &&
-                            price <= maxPrice;
+                            price >= min &&
+                            price <= max;
                 }
             });
             setFilteredProducts(filtered);
@@ -54,24 +57,12 @@ function AllProducts() {
         }
     }, [products, minPrice, maxPrice, selectedCategory]);
 
-    // //Initialize DataTable
-    // useEffect(() => {
-    //     if (filteredProducts.length > 0 && !$.fn.DataTable.isDataTable("#products")) {
-    //         $("#products").DataTable();
-    //     }
-    //
-    //     return () => {
-    //         if ($.fn.dataTable.isDataTable("#products")) {
-    //             $("#products").DataTable().destroy();
-    //         }
-    //     };
-    // }, []);
-
     //Format price to EUR
     const formatPrice = (price) => {
         return new Intl.NumberFormat('en-IE', {style: 'currency', currency: 'EUR'}).format(price);
     }
 
+    //Define the columns for the DataTable
     const columns = [
         {data: "name", title: "Name"},
         {data: "description", title: "Description"},
@@ -105,10 +96,21 @@ function AllProducts() {
                         type="number"
                         id="minPrice"
                         name="minPrice"
-                        value={minPrice === 0 ? "" : minPrice.toFixed(2)}
+                        value={minPrice === 0 ? '0.00' : minPrice}
+                        min={0}
                         step={0.5}
-                        onChange={(minPriceInput) => setMinPrice(parseFloat(minPriceInput.target.value) || 0)}
-                        onBlur={(e) => setMinPrice(parseFloat(e.target.value).toFixed(2))}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setMinPrice(value);
+                        }}
+                        onBlur={(e) => {
+                            const value = parseFloat(e.target.value);
+                            if (!isNaN(value)) {
+                                setMinPrice(value.toFixed(2));
+                            } else {
+                                setMinPrice('0.00');
+                            }
+                        }}
                     />
                 </div>
 
@@ -118,10 +120,21 @@ function AllProducts() {
                         type="number"
                         id="maxPrice"
                         name="maxPrice"
-                        value={maxPrice === Infinity ? "" : maxPrice.toFixed(2)}
+                        value={maxPrice}
+                        min={0}
                         step={0.5}
-                        onChange={(maxPriceInput) => setMaxPrice(parseFloat(maxPriceInput.target.value) || Infinity)}
-                        onBlur={(e) => setMaxPrice(parseFloat(e.target.value).toFixed(2))}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setMaxPrice(value);
+                        }}
+                        onBlur={(e) => {
+                            const value = parseFloat(e.target.value);
+                            if (!isNaN(value)) {
+                                setMaxPrice(value.toFixed(2));
+                            } else {
+                                setMaxPrice('');
+                            }
+                        }}
                     />
                 </div>
 
