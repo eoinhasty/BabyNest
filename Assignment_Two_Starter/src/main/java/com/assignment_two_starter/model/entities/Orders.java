@@ -1,5 +1,7 @@
 package com.assignment_two_starter.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.*;
@@ -54,19 +56,17 @@ public class Orders implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
+    @JsonBackReference("ordersCustomerReference")
     private Customer customer;
 
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "address_id")
     @ManyToOne
     @ToString.Exclude
+    @JsonBackReference("addressOrdersReference")
     private Address shippingAddressId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     @ToString.Exclude
+    @JsonManagedReference("orderItemsReference")
     private List<OrderItems> orderItemsList;
-
-
-
-
-
 }

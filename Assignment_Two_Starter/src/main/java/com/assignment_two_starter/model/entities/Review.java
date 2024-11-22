@@ -39,16 +39,16 @@ public class Review implements Serializable {
     @Column(name = "approved")
     private Boolean approved;
 
-    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
+    @JsonBackReference("reviewCustomerReference")
     private Customer customer;
 
-    @JsonBackReference
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
+    @JsonBackReference("reviewProductReference")
     private Product product;
 
 }

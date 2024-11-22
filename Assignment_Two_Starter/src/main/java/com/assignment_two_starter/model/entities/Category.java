@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -37,7 +38,7 @@ public class Category implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     @ToString.Exclude
     private List<Product> productList;

@@ -1,5 +1,6 @@
 package com.assignment_two_starter.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class ShoppingCart implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
+    @JsonBackReference("shoppingCartCustomerReference")
     private Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cartId")

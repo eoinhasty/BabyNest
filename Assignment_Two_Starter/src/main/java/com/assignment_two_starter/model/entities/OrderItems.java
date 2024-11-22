@@ -2,6 +2,9 @@ package com.assignment_two_starter.model.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -37,13 +40,12 @@ public class OrderItems implements Serializable {
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
+    @JsonBackReference("orderItemsReference")
     private Orders order;
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
+    @JsonBackReference("orderItemsProductReference")
     private Product product;
-
-
-    
 }
