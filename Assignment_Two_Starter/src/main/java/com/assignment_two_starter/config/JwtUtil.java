@@ -3,8 +3,11 @@ package com.assignment_two_starter.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -22,8 +25,10 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    //I really should be using a stronger secret key than this. Ideally it shouldn't be stored in the code at all
-    private String secret = "this_is_my_secret_key";
+    //256 Bit Base64 string. Ideally it shouldn't be stored in the code at all
+    private String secret = "do5bf5EfC9fSTccODsZwLawNOS7iLWZG4W2V3jY9e7g=";
+
+    private SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
 
     /**
      * Extracts the username from the JWT.
@@ -65,7 +70,7 @@ public class JwtUtil {
      * @return all claims present in the token
      */
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
     /**
@@ -87,9 +92,9 @@ public class JwtUtil {
     public String generateToken(String username) {
         return Jwts.builder().setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) //sets it that the token will expire 10hrs after it has been issued
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) //sets it that the token will expire 7 Days after it has been issued
                 //.setExpiration(new Date(System.currentTimeMillis() + 1000 * 10))  //sets it that the token will expire 10 seconds after it has been issued
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+                .signWith(secretKey, SignatureAlgorithm.HS256).compact();
     }
 
     /**
