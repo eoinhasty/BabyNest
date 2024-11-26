@@ -1,4 +1,4 @@
-package com.assignment_two_starter.model.repository;
+package com.assignment_two_starter.model.repositories;
 
 import com.assignment_two_starter.model.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
