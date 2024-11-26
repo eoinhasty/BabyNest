@@ -1,9 +1,8 @@
 package com.assignment_two_starter.model.services;
 
 import com.assignment_two_starter.model.entities.Role;
-import com.assignment_two_starter.model.repository.CustomerRepository;
+import com.assignment_two_starter.model.repositories.CustomerRepository;
 import com.assignment_two_starter.model.entities.Customer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +35,14 @@ public class CustomerService implements UserDetailsService {
             return null;
     }
 
+    public Customer getCustomerByEmail(String email) {
+        Optional<Customer> c = customerRepository.findByEmail(email);
+        if (c.isPresent())
+            return c.get();
+        else
+            return null;
+    }
+
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
@@ -60,6 +67,8 @@ public class CustomerService implements UserDetailsService {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
+        System.out.println("Customer Email: " + customer.getEmail());
+
         List<GrantedAuthority> authorities = customer.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toList());
@@ -81,11 +90,10 @@ public class CustomerService implements UserDetailsService {
     This method converts a set of Role objects into a collection of GrantedAuthority
     objects prefixed with "ROLE_" for use in authorisation.
     */
-    private Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roles) {
+    public Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roles) {
         Set<GrantedAuthority> authorities = new HashSet();
         for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-
         }
         return authorities;
     }
