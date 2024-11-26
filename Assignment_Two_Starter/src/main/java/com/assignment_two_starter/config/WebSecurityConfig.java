@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                     .authorizeHttpRequests(authorize -> authorize
                         // Publicly accessible endpoints
                         .requestMatchers("/api/authenticate", "/api/products/**", "/api/categories/**", "/", "/assets/images/**", "/api/customers/registerCustomer").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/cart/**").hasRole("CUSTOMER")
                         // All other requests require authentication
                         .anyRequest().authenticated()
                 )
