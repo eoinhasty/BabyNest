@@ -1,14 +1,21 @@
 package com.assignment_two_starter.config;
 
+import com.assignment_two_starter.model.entities.Customer;
+import com.assignment_two_starter.model.services.CustomerService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -29,6 +36,9 @@ public class JwtUtil {
     private String secret = "do5bf5EfC9fSTccODsZwLawNOS7iLWZG4W2V3jY9e7g=";
 
     private SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+
+    @Autowired
+    private CustomerService customerService;
 
     /**
      * Extracts the username from the JWT.
@@ -90,7 +100,19 @@ public class JwtUtil {
      * @return the generated JWT
      */
     public String generateToken(String username) {
-        return Jwts.builder().setSubject(username)
+        Customer customer = customerService.getCustomerByEmail(username);
+
+        Map<String, Object> claims = new HashMap<>();
+
+        List<String> roles = customerService.getAuthorities(customer.getRoles()).stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        claims.put("authorities", roles);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) //sets it that the token will expire 7 Days after it has been issued
                 //.setExpiration(new Date(System.currentTimeMillis() + 1000 * 10))  //sets it that the token will expire 10 seconds after it has been issued
