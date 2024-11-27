@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import React, {useEffect, useState} from "react";
+import '../css/Cart.css';
 import '../css/QuantityInput.css';
 
 function Cart() {
@@ -98,6 +99,10 @@ function Cart() {
         }
     }
 
+    const handleCheckout = async () => {
+
+    }
+
     const handleDecrease = (cartItemId, currentQuantity) => {
         const newValue = Math.max(currentQuantity - 1, 1);
         setCart((prevCart) =>
@@ -112,7 +117,7 @@ function Cart() {
         const newValue = Math.min(currentQuantity + 1, stockQuantity);
         setCart((prevCart) =>
             prevCart.map((item) =>
-                item.cartItemId === cartItemId ? { ...item, quantity: newValue } : item
+                item.cartItemId === cartItemId ? {...item, quantity: newValue} : item
             )
         );
         updateCart(cartItemId, newValue);
@@ -123,7 +128,7 @@ function Cart() {
         if (!isNaN(newValue) && newValue >= 1) {
             setCart((prevCart) =>
                 prevCart.map((item) =>
-                    item.cartItemId === cartItemId ? { ...item, quantity: newValue } : item
+                    item.cartItemId === cartItemId ? {...item, quantity: newValue} : item
                 )
             );
         }
@@ -134,7 +139,7 @@ function Cart() {
         if (!isNaN(newValue) && newValue >= 1) {
             setCart((prevCart) =>
                 prevCart.map((item) =>
-                    item.cartItemId === cartItemId ? { ...item, quantity: newValue } : item
+                    item.cartItemId === cartItemId ? {...item, quantity: newValue} : item
                 )
             );
             updateCart(cartItemId, newValue);
@@ -147,14 +152,16 @@ function Cart() {
     }
 
     return (
-        <div>
-            <p style={{color: "red"}}>{errorMessage}</p>
+        <div className={"cart-page"}>
+            {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
             <table>
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Product</th>
                     <th>Quantity</th>
                     <th>Price</th>
+                    <th></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -163,6 +170,15 @@ function Cart() {
                     cart && cart.length > 0 ? (
                         cart.map((item, index) => (
                             <tr key={index}>
+                                <td>
+                                    <a href={`/products/${item.product?.productId}`}>
+                                        <img
+                                            src={'http://localhost:8888/assets/images/thumbs/' + item.product?.productId + '/' + item.product?.feature_image}
+                                            alt={item.product?.name}
+                                            width={50}
+                                        />
+                                    </a>
+                                </td>
                                 <td>{item.product?.name}</td>
                                 <td>
                                     <div className="quantity">
@@ -195,18 +211,23 @@ function Cart() {
                                 </td>
                                 <td>{formatPrice(item.product?.price * item.quantity)}</td>
                                 <td>
-                                    <button onClick={() => handleRemove(item.cartItemId)}>Remove</button>
+                                    <button onClick={() => handleRemove(item.cartItemId)}
+                                            className={"remove-item"}>Remove
+                                    </button>
                                 </td>
                                 <td>
-                                    {item.quantity >= item.product.stockQuantity && (
-                                        <p style={{color: 'red'}}>Maximum stock limit reached</p>
+                                    {item.quantity >= item.product.stockQuantity ? (
+                                        <span className={"quantity-warning"}
+                                              title={"Maximum quantity reached"}>&#x24D8;</span>
+                                    ) : (
+                                        <span className={"quantity-warning"}>&nbsp;</span>
                                     )}
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={3}>Cart is empty</td>
+                            <td colSpan={6}>Cart is empty</td>
                         </tr>
                     )
                 }
@@ -215,9 +236,9 @@ function Cart() {
 
             {cart && cart.length > 0 && (
                 <div>
-                    <p>Total: {formatPrice(cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0))}</p>
-                    <button>Checkout</button>
-                    <button onClick={handleClearCart}>Clear Cart</button>
+                    <p className={"total-price"}>Total: {formatPrice(cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0))}</p>
+                    <button onClick={handleCheckout} className={"checkout"}>Checkout</button>
+                    <button onClick={handleClearCart} className={"clear-cart"}>Clear Cart</button>
                 </div>
             )}
         </div>
