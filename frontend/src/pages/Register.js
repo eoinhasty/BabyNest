@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../css/Register.css';
 
 function Register() {
-    const [formData, setFormData] = React.useState({
+    const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
     });
 
-    const [error, setError] = React.useState('');
+    const [error, setError] = useState('');
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
