@@ -3,12 +3,15 @@ import {useParams} from "react-router-dom";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import '../css/ProductDrilldown.css';
+import Cookies from "js-cookie";
 
 function ProductDrilldown() {
 
     const {productId} = useParams();
-    const [product, setProduct] = useState([]);
+    const [product, setProduct] = useState(null);
     const [imageList, setImageList] = useState([]);
+    const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
 
     const responsive = {
         desktop: {
@@ -29,15 +32,33 @@ function ProductDrilldown() {
     };
 
     const fetchApi = async () => {
-        const response = await fetch(`http://localhost:8888/api/products/${productId}`);
-        const data = await response.json();
-        setProduct(data);
+        try {
+            const response = await fetch(`http://localhost:8888/api/products/${productId}`);
+
+            if(response.ok) {
+                const data = await response.json();
+                setProduct(data);
+            } else {
+                setProduct(null);
+            }
+        } catch (error) {
+            setProduct(null);
+        }
     };
 
     const fetchImages = async () => {
-        const response = await fetch(`http://localhost:8888/api/products/${productId}/images`);
-        const data = await response.json();
-        setImageList(data);
+        try {
+            const response = await fetch(`http://localhost:8888/api/products/${productId}/images`);
+
+            if(response.ok) {
+                const data = await response.json();
+                setImageList(data);
+            } else {
+                setImageList([]);
+            }
+        } catch (error) {
+            setImageList([]);
+        }
     };
 
     useEffect(() => {
@@ -58,6 +79,38 @@ function ProductDrilldown() {
     }
 
     const approvedReviews = product.reviewList ? product.reviewList.filter(review => review.approved) : [];
+
+    const addToCart = async () => {
+        if(!Cookies.get('jwt')) {
+            setError('Please login to add items to cart');
+        } else {
+            try {
+                const response = await fetch ('http://localhost:8888/api/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('jwt')}`
+                    },
+                    body: JSON.stringify({productId: product.productId, quantity: 1})
+                });
+
+
+
+                if(response.ok) {
+                    setMessage('Item added to cart');
+                    setError('');
+                } else if (response.status === 406) {
+                    setError('Stock Quantity exceeded');
+                    setMessage('');
+                } else {
+                    setError('Failed to add item to cart');
+                    setMessage('');
+                }
+            } catch (error) {
+                setError('Failed to add item to cart');
+            }
+        }
+    }
 
     return (
         <div>
@@ -116,6 +169,11 @@ function ProductDrilldown() {
                 ) : (
                     <p className="inStock">{product.stockQuantity} available</p>
                 )}
+
+                {error && <p className="addToCart-error">{error}</p>}
+                {message && <p className="addToCart-success">{message}</p>}
+
+                <button onClick={addToCart} disabled={product.stockQuantity === 0}>Add to Cart</button>
 
                 <h2>Category: {product.category?.name}</h2>
                 <p>{product.category?.description}</p>
