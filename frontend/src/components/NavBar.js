@@ -1,14 +1,28 @@
 import React, {useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
 import '../css/NavBar.css';
 
 function NavBar() {
     const [loggedIn, setLoggedIn] = React.useState(!!Cookies.get('jwt'));
+    const [decodedJwt, setDecodedJwt] = React.useState(null);
     const navigate = useNavigate();
 
+    const isCustomer = decodedJwt?.authorities?.includes("ROLE_CUSTOMER");
+    const isAdmin = decodedJwt?.authorities?.includes("ROLE_ADMIN");
+
     useEffect(() => {
-        setLoggedIn(!!Cookies.get('jwt'));
+        const jwt = Cookies.get('jwt');
+        setLoggedIn(!!jwt);
+        if(jwt) {
+            try{
+                const decoded = jwtDecode(jwt);
+                setDecodedJwt(decoded);
+            } catch (e) {
+                console.log("Error decoding JWT: " + e);
+            }
+        }
     }, []);
 
     useEffect(() => {
@@ -38,9 +52,14 @@ function NavBar() {
                 {
                     loggedIn ? (
                         <>
-                            <li><Link to="/cart">Cart {}</Link></li>
+                            {isCustomer && (
+                                <li><Link to="/cart">Cart</Link></li>
+                            )}
+                            {isAdmin && (
+                                <></>
+                            )}
                             <li>
-                                <button onClick={handleLogout} className={"logout-button"}>Logout</button>
+                            <button onClick={handleLogout} className={"logout-button"}>Logout</button>
                             </li>
                         </>
                     ) : (
@@ -49,6 +68,7 @@ function NavBar() {
                             <li><Link to="/register">Register</Link></li>
                         </>
                     )
+
                 }
             </ul>
         </nav>
