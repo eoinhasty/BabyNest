@@ -59,8 +59,7 @@ public class Product implements Serializable {
     @JsonManagedReference("reviewProductReference")
     private List<Review> reviewList;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @ToString.Exclude
     @JsonBackReference("cartItemProductReference")
     private List<CartItem> cartItemList;
