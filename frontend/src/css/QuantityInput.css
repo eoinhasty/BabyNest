@@ -1,0 +1,58 @@
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Add space between buttons and input */
+}
+
+.quantity button {
+    background-color: #ff85a2;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.5rem;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.quantity button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.quantity button:hover:not(:disabled) {
+    background-color: #ff6081;
+}
+
+.quantity button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.input-box {
+    width: 40px;
+    height: 30px;
+    font-size: 1rem;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.input-box:focus {
+    border-color: #ff85a2;
+    box-shadow: 0 0 5px rgba(255, 133, 162, 0.5);
+}
