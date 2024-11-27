@@ -227,7 +227,7 @@ function Cart() {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={6}>Cart is empty</td>
+                            <td colSpan={6}><p>Cart is empty. View our products <a href={'/products'}>here</a>!</p></td>
                         </tr>
                     )
                 }
