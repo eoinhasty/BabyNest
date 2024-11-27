@@ -94,13 +94,11 @@ function ProductDrilldown() {
                     body: JSON.stringify({productId: product.productId, quantity: 1})
                 });
 
-
-
                 if(response.ok) {
                     setMessage('Item added to cart');
                     setError('');
                 } else if (response.status === 406) {
-                    setError('Stock Quantity exceeded');
+                    setError('Sorry, we don\'t have enough stock to fulfill your request. Please check your cart.');
                     setMessage('');
                 } else {
                     setError('Failed to add item to cart');
@@ -173,7 +171,7 @@ function ProductDrilldown() {
                 {error && <p className="addToCart-error">{error}</p>}
                 {message && <p className="addToCart-success">{message}</p>}
 
-                <button onClick={addToCart} disabled={product.stockQuantity === 0}>Add to Cart</button>
+                <button onClick={addToCart} disabled={product.stockQuantity === 0} className={"addToCart-button"}>Add to Cart</button>
 
                 <h2>Category: {product.category?.name}</h2>
                 <p>{product.category?.description}</p>
