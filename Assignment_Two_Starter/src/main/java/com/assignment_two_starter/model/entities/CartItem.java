@@ -1,5 +1,7 @@
 package com.assignment_two_starter.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -32,12 +34,14 @@ public class CartItem implements Serializable {
     @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
-    private ShoppingCart cartId;
+    @JsonBackReference("cartItemCartReference")
+    private ShoppingCart cart;
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
-    private Product productId;
+    @JsonManagedReference("cartItemProductReference")
+    private Product product;
 
 
 }

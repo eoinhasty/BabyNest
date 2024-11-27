@@ -1,6 +1,7 @@
 package com.assignment_two_starter.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -11,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
  * @author Alan.Ryan
  */
 @Entity
@@ -39,8 +39,8 @@ public class ShoppingCart implements Serializable {
     @JsonBackReference("shoppingCartCustomerReference")
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cartId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cart", orphanRemoval = true)
     @ToString.Exclude
+    @JsonManagedReference("cartItemCartReference")
     private List<CartItem> cartItemList;
-
 }
