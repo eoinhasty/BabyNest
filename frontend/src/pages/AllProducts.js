@@ -88,7 +88,7 @@ function AllProducts() {
 
     //Render the component
     return (
-        <div className={"App"}>
+        <div className={"products"}>
             <form className="all-products-form">
                 <div className="all-products-input-wrapper">
                     <label htmlFor="minPrice">Min Price:</label>
@@ -157,14 +157,27 @@ function AllProducts() {
             </form>
 
             <DataTable
+                id={"myDataTable"}
                 data={filteredProducts}
                 className={"display"}
                 columns={columns}
+
                 options={{
                     paging: true,
                     searching: true,
                     ordering: false,
-                }}>
+                    responsive: true,
+                    deferRender: true,
+                    language: {
+                        emptyTable: "No products found",
+                        info: "Showing _START_ to _END_ of _TOTAL_ products",
+                        lengthMenu: "_MENU_ products per page",
+                    },
+                    drawCallback: function () {
+                        this.api().columns.adjust();
+                    },
+                }}
+            >
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -178,42 +191,5 @@ function AllProducts() {
         </div>
     );
 }
-
-// <table id={"products"} className={"display"}>
-//     <thead>
-//     <tr>
-//         <th>Name</th>
-//         <th>Description</th>
-//         <th>Price</th>
-//         <th>Category</th>
-//         <th>Image</th>
-//     </tr>
-//     </thead>
-//     <tbody>
-//     {filteredProducts.length > 0 ? (
-//         filteredProducts.map((product) => (
-//             <tr key={product.productId}>
-//                 <td>{product.name}</td>
-//                 <td>{product.description}</td>
-//                 <td>{formatPrice(product.price)}</td>
-//                 <td>{product.category?.name || "Uncategorized"}</td>
-//                 <td>
-//                     <Link to={`/products/${product.productId}`}>
-//                         <img
-//                             src={`http://localhost:8888/assets/images/thumbs/${product.productId}/${product.feature_image}`}
-//                             alt={product.name}
-//                             style={{width: "100px"}}
-//                         />
-//                     </Link>
-//                 </td>
-//             </tr>
-//         ))
-//     ) : (
-//         <tr>
-//             <td colSpan={5}>No products found</td>
-//         </tr>
-//     )}
-//     </tbody>
-// </table>
 
 export default AllProducts;
