@@ -4,14 +4,18 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import '../css/ProductDrilldown.css';
 import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+import {useNavigate} from "react-router-dom";
 
 function ProductDrilldown() {
 
     const {productId} = useParams();
     const [product, setProduct] = useState(null);
     const [imageList, setImageList] = useState([]);
+    const [reviewList, setReviewList] = useState([]);
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const responsive = {
         desktop: {
@@ -35,7 +39,7 @@ function ProductDrilldown() {
         try {
             const response = await fetch(`http://localhost:8888/api/products/${productId}`);
 
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json();
                 setProduct(data);
             } else {
@@ -61,9 +65,37 @@ function ProductDrilldown() {
         }
     };
 
+    const fetchReviews = async () => {
+        try {
+            const response = await fetch(`http://localhost:8888/api/products/${productId}/reviews`);
+
+            if (response.ok) {
+                const data = await response.json();
+                setReviewList(data);
+            } else {
+                setReviewList([]);
+            }
+        } catch (error) {
+            setReviewList([]);
+        }
+    }
+
+    const checkLoggedIn = () => {
+        if (Cookies.get('jwt')) {
+            try {
+                return jwtDecode(Cookies.get('jwt'));
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
     useEffect(() => {
         fetchApi();
         fetchImages();
+        fetchReviews();
+        setIsAdmin(checkLoggedIn()?.authorities?.includes("ROLE_ADMIN"));
     }, [productId]);
 
     const formatPrice = (price) => {
@@ -78,14 +110,12 @@ function ProductDrilldown() {
         return <h2>Product not found</h2>
     }
 
-    const approvedReviews = product.reviewList ? product.reviewList.filter(review => review.approved) : [];
-
     const addToCart = async () => {
-        if(!Cookies.get('jwt')) {
+        if (!Cookies.get('jwt')) {
             setError('Please login to add items to cart');
         } else {
             try {
-                const response = await fetch ('http://localhost:8888/api/cart/add', {
+                const response = await fetch('http://localhost:8888/api/cart/add', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -94,7 +124,7 @@ function ProductDrilldown() {
                     body: JSON.stringify({productId: product.productId, quantity: 1})
                 });
 
-                if(response.ok) {
+                if (response.ok) {
                     setMessage('Item added to cart');
                     setError('');
                 } else if (response.status === 406) {
@@ -171,20 +201,31 @@ function ProductDrilldown() {
                 {error && <p className="addToCart-error">{error}</p>}
                 {message && <p className="addToCart-success">{message}</p>}
 
-                <button onClick={addToCart} disabled={product.stockQuantity === 0} className={"addToCart-button"}>Add to Cart</button>
+                {!isAdmin && (
+                    <button onClick={addToCart} disabled={product.stockQuantity === 0}
+                            className={"addToCart-button"}>Add to Cart</button>
+                )}
 
                 <h2>Category: {product.category?.name}</h2>
                 <p>{product.category?.description}</p>
 
                 <h2>Reviews:</h2>
-                {approvedReviews.length > 0 ? (
+                {reviewList.length > 0 ? (
                     <ul>
-                        {approvedReviews.map((review, index) => (
+                        {reviewList.map((review, index) => (
                             <li key={index}>
-                                <p>Rating: {review.rating}/5 ★</p>
+                                <p>
+                                    Rating:{" "}
+                                    {Array(review.rating)
+                                        .fill("★")
+                                        .map((star, i) => (
+                                            <span key={i} style={{color: "gold"}}>{star}</span>
+                                        ))}
+                                </p>
                                 <p>Review Date: {formatDate(review.createdAt.Date)}</p>
                                 <p>{review.reviewText}</p>
                             </li>
+
                         ))}
                     </ul>
                 ) : (
