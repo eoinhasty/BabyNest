@@ -10,6 +10,7 @@ import com.assignment_two_starter.model.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -124,12 +125,33 @@ public class ShoppingCartService {
     public ShoppingCart clearCart(Customer customer) {
         ShoppingCart cart = getOrCreateCart(customer);
 
-        System.out.println("Before clear: " + cart.getCartItemList().size());
         cart.getCartItemList().clear();
-        System.out.println("After clear: " + cart.getCartItemList().size());
-        cart.setUpdatedAt(new Date());
         shoppingCartRepository.save(cart);
 
+        cart.setUpdatedAt(new Date());
         return cart;
+    }
+
+    public ShoppingCart getCartById(Integer cartId) {
+        Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(cartId);
+
+        if (cartOptional.isEmpty()) {
+            throw new IllegalArgumentException("Cart not found");
+        }
+
+        return cartOptional.get();
+    }
+
+    public List<String> RemoveProductsFromCart( Product product ) {
+        List<CartItem> cartItems = cartItemRepository.findByProduct(product);
+
+        List<String> affectedUsers = cartItems.stream()
+                .map(ci -> ci.getCart().getCustomer().getEmail())
+                .distinct()
+                .toList();
+
+        cartItemRepository.deleteAll(cartItems);
+
+        return affectedUsers;
     }
 }
