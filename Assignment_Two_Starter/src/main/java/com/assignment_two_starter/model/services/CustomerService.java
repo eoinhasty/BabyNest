@@ -5,11 +5,13 @@ import com.assignment_two_starter.model.repositories.CustomerRepository;
 import com.assignment_two_starter.model.entities.Customer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,6 +49,16 @@ public class CustomerService implements UserDetailsService {
         return customerRepository.findAll();
     }
 
+    public List<Customer> getSuspendedCustomers() {
+        Optional<List<Customer>> suspendedCustomers = customerRepository.findByLockedTrue();
+
+        if (suspendedCustomers.isPresent()) {
+            return suspendedCustomers.get();
+        } else {
+            return null;
+        }
+    }
+
     public void deleteCustomer(Customer customer) {
         customerRepository.delete(customer);
     }
@@ -55,11 +67,30 @@ public class CustomerService implements UserDetailsService {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customer.setCreatedAt(new Date());
         customer.setUpdatedAt(new Date());
+        customer.setRoles(new HashSet<>(Collections.singletonList(new Role(1L, "CUSTOMER"))));
         return customerRepository.save(customer);
     }
 
     public boolean emailExists(String email) {
         return customerRepository.findByEmail(email).isPresent();
+    }
+
+    @Transactional
+    public void suspendAccount(Integer userId) {
+        Optional<Customer> customer = customerRepository.findById(userId);
+        if (customer.isPresent()) {
+            customer.get().setLocked(true);
+            customerRepository.save(customer.get());
+        }
+    }
+
+    @Transactional
+    public void activateAccount(Integer userId) {
+        Optional<Customer> customer = customerRepository.findById(userId);
+        if(customer.isPresent()){
+            customer.get().setLocked(false);
+            customerRepository.save(customer.get());
+        }
     }
 
     @Override
@@ -98,5 +129,8 @@ public class CustomerService implements UserDetailsService {
         return authorities;
     }
 
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
+    }
 }
 
