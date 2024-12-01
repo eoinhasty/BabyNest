@@ -2,10 +2,12 @@ import Cookies from "js-cookie";
 import React, {useEffect, useState} from "react";
 import '../css/Cart.css';
 import '../css/QuantityInput.css';
+import {useNavigate} from "react-router-dom";
 
 function Cart() {
     const [cart, setCart] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const fetchApi = async () => {
         const response = await fetch('http://localhost:8888/api/cart/', {
@@ -99,9 +101,14 @@ function Cart() {
         }
     }
 
-    const handleCheckout = async () => {
+    const handleCheckout = () => {
+        if (cart.length === 0) {
+            setErrorMessage('Your cart is empty.');
+            return;
+        }
 
-    }
+        navigate('/checkout');
+    };
 
     const handleDecrease = (cartItemId, currentQuantity) => {
         const newValue = Math.max(currentQuantity - 1, 1);
@@ -237,7 +244,7 @@ function Cart() {
             {cart && cart.length > 0 && (
                 <div>
                     <p className={"total-price"}>Total: {formatPrice(cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0))}</p>
-                    <button onClick={handleCheckout} className={"checkout"}>Checkout</button>
+                    <button onClick={handleCheckout} className={"checkout"}>Continue to Checkout</button>
                     <button onClick={handleClearCart} className={"clear-cart"}>Clear Cart</button>
                 </div>
             )}
