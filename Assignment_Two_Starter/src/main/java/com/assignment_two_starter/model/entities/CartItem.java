@@ -40,7 +40,6 @@ public class CartItem implements Serializable {
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
-    @JsonManagedReference("cartItemProductReference")
     private Product product;
 
 
