@@ -5,8 +5,11 @@ import {jwtDecode} from "jwt-decode";
 
 const ProtectedRoute = ({ children }) => {
     const jwt = Cookies.get("jwt");
+    const decodedJwt = jwtDecode(jwt);
 
-    if (!jwt) {
+    const isCustomer = decodedJwt?.authorities?.includes("ROLE_CUSTOMER");
+
+    if (!isCustomer) {
         return <Navigate to="/login" replace />;
     }
 
