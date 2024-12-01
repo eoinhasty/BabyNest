@@ -1,6 +1,7 @@
 package com.assignment_two_starter.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -68,5 +69,6 @@ public class Orders implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     @ToString.Exclude
     @JsonManagedReference("orderItemsReference")
+    @JsonIgnoreProperties({"order"})
     private List<OrderItems> orderItemsList;
 }
