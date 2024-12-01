@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -31,8 +32,8 @@ public class OrderItems implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know the range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(name = "unit_price")
-
     private BigDecimal unitPrice;
+
     @Basic(optional = false)
     @Column(name = "total_price")
     private Double totalPrice;
@@ -46,6 +47,7 @@ public class OrderItems implements Serializable {
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne(optional = false)
     @ToString.Exclude
-    @JsonBackReference("orderItemsProductReference")
+//    @JsonManagedReference("orderItemsProductReference")
+    @JsonIgnoreProperties({"reviewList", "cartItemList", "orderItemList"})
     private Product product;
 }
