@@ -34,6 +34,8 @@ public class AuthenticationController {
      */
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        String password = authenticationRequest.getPassword();
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
@@ -46,6 +48,12 @@ public class AuthenticationController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        System.out.println("JWT: " + jwt);
+
+        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
+            return ResponseEntity.ok(new AuthenticationResponse(jwt, "PasswordUpdateRequired"));
+        }
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, "AuthenticationSuccessful"));
     }
 }
