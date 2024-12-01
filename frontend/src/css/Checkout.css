@@ -1,0 +1,124 @@
+.address {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.address h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+.address .error-message {
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.address .address-list select {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.address button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+    background-color: #ff85a2;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.address button:hover {
+    background-color: #ff6081;
+}
+
+.address .add-button {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.address .delete-button {
+    background-color: #ff4d4f;
+}
+
+.address .delete-button:hover {
+    background-color: #d9363e;
+}
+
+.address .checkout-button {
+    display: block;
+    width: 100%;
+    background-color: #28a745;
+    margin-top: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.address .checkout-button:hover {
+    background-color: #218838;
+}
+
+.address form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.address form input {
+    margin-bottom: 15px;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.address form input:focus {
+    outline: none;
+    border-color: #ff85a2;
+    box-shadow: 0 0 3px #ff85a2;
+}
+
+.address form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    background-color: #ff85a2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.address form button:hover {
+    background-color: #ff6081;
+}

@@ -4,33 +4,38 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
-    background-color: #f9f9f9;
-    padding: 20px;
+    background-color: #ffffff;
+    padding: 20px 30px;
     margin: 0 auto;
     margin-bottom: 30px;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 750px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
 }
 
 .all-products-form label {
     font-weight: bold;
     margin-right: 10px;
-    color: #333;
+    color: #444;
+    font-size: 1rem;
 }
 
-.all-products-form input[type="number"], .all-products-form select {
-    padding: 10px;
+.all-products-form input[type="number"],
+.all-products-form select {
+    padding: 10px 12px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #f9f9f9;
+    width: 220px;
+    box-sizing: border-box;
 }
 
-.all-products-form input[type="number"]:focus, .all-products-form select:focus {
-    border-color: #007bff;
-    box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.3);
+.all-products-form input[type="number"]:focus,
+.all-products-form select:focus {
+    border-color: #8BBCC8;
+    box-shadow: 0px 0px 8px rgba(108, 184, 200, 0.3);
 }
 
 .all-products-form select {
@@ -40,19 +45,101 @@
 .all-products-input-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    width: auto;
 }
 
 .all-products-input-wrapper label {
     margin-bottom: 5px;
+    font-size: 0.95rem;
+    color: #666;
 }
 
-@media (max-width: 768px) {
-    .all-products-form {
-        flex-direction: column;
-        gap: 15px;
-    }
+.all-products-input-wrapper input,
+.all-products-input-wrapper select {
+    width: 100%;
+}
 
-    .all-products-input-wrapper {
-        width: 100%;
-    }
+ .products .display {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.products .display th,
+.products .display td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+.products .display th {
+    background-color: #ff85a2;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+}
+
+.products .display tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.products .dt-layout-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 20%
+}
+
+.products .dt-length,
+.products .dt-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.products .dt-length select,
+.products .dt-search input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    outline: none;
+}
+
+.products .dt-length select:focus,
+.products .dt-search input:focus {
+    border-color: #8BBCC8;
+    box-shadow: 0 0 6px rgba(139, 188, 200, 0.5);
+}
+
+.products .dt-layout-row .dt-paging button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.products .dt-layout-row .dt-paging button:hover {
+    background-color: #ff85a2;
+    color: white;
+    border-color: #ff85a2;
+}
+
+.products .dt-layout-row .dt-paging button.current {
+    background-color: #ff85a2;
+    color: white;
+    border: 1px solid #ff85a2;
+    font-weight: bold;
 }

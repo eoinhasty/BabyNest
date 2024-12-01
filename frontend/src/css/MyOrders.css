@@ -1,0 +1,103 @@
+.my-orders {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.my-orders h1 {
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.my-orders .display {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.my-orders .display th,
+.my-orders .display td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
+}
+
+.my-orders .display th {
+    background-color: #ff85a2;
+    color: #fff;
+    font-weight: bold;
+}
+
+.my-orders .display tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.my-orders .display td a.details-link {
+    color: #ff85a2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.my-orders .display td a.details-link:hover {
+    text-decoration: underline;
+    color: #e06b89;
+}
+
+.my-orders .dt-layout-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.my-orders .dt-length {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.my-orders .dt-length select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    outline: none;
+}
+
+
+
+.my-orders .dt-layout-row .dt-paging button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.my-orders .dt-layout-row .dt-paging button:hover {
+    background-color: #ff85a2;
+    color: white;
+    border-color: #ff85a2;
+}
+
+.my-orders .dt-layout-row .dt-paging button.current {
+    background-color: #ff85a2;
+    color: white;
+    border: 1px solid #ff85a2;
+    font-weight: bold;
+}
