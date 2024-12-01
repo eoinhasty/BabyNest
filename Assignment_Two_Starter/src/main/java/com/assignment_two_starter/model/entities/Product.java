@@ -1,9 +1,11 @@
 package com.assignment_two_starter.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
@@ -29,6 +31,7 @@ public class Product implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "name")
+    @NotBlank(message = "Product name must not be blank")
     private String name;
 
     @Lob
@@ -38,13 +41,20 @@ public class Product implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know the range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(name = "price")
+    @NotNull(message = "Price must not be null")
+    @Min(value = 0, message = "Price must be greater than or equal 0")
     private Double price;
 
     @Column(name = "stock_quantity")
+    @NotNull(message = "Stock quantity must not be null")
+    @Min(value = 0, message = "Stock quantity must be greater than or equal 0")
     private Integer stockQuantity;
 
     @Column(name = "feature_image")
     private String feature_image;
+
+    @Column(name = "archived")
+    private Boolean archived;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,18 +66,18 @@ public class Product implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @ToString.Exclude
-    @JsonManagedReference("reviewProductReference")
+    @JsonIgnoreProperties({"product"})
     private List<Review> reviewList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @ToString.Exclude
-    @JsonBackReference("cartItemProductReference")
+    @JsonIgnore
     private List<CartItem> cartItemList;
 
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @ToString.Exclude
-    @JsonBackReference("orderItemsProductReference")
+//    @JsonBackReference("orderItemsProductReference")
+    @JsonIgnore
     private List<OrderItems> orderItemsList;
 
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
