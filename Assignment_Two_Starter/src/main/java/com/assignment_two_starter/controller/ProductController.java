@@ -1,7 +1,9 @@
 package com.assignment_two_starter.controller;
 
 import com.assignment_two_starter.model.entities.Product;
+import com.assignment_two_starter.model.entities.Review;
 import com.assignment_two_starter.model.services.ProductService;
+import com.assignment_two_starter.model.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,12 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @GetMapping("/")
     public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+        List<Product> products = productService.getUnarchivedProducts();
         if (products == null || products.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -47,5 +52,14 @@ public class ProductController {
         List<String> images = Arrays.asList(imageFiles);
 
         return ResponseEntity.ok(images);
+    }
+
+    @GetMapping("/{productId}/reviews")
+    public ResponseEntity<List<Review>> getProductReviews(@PathVariable Integer productId) {
+        List<Review> reviews = reviewService.getReviewsByProductId(productId);
+        if (reviews == null || reviews.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reviews);
     }
 }
