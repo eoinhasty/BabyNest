@@ -47,8 +47,11 @@ public class WebSecurityConfig {
                 .csrf().disable()
                     .authorizeHttpRequests(authorize -> authorize
                         // Publicly accessible endpoints
-                        .requestMatchers("/api/authenticate", "/api/products/**", "/api/categories/**", "/", "/assets/images/**", "/api/customers/registerCustomer").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/cart/**").hasRole("CUSTOMER")
+                        .requestMatchers( HttpMethod.POST, "/api/authenticate", "/api/customers/registerCustomer", "/api/customers/updatePassword").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**", "/assets/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/cart/**", "/api/address/", "/api/orders/**").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/api/address/**", "/api/orders/create").hasRole("CUSTOMER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // All other requests require authentication
                         .anyRequest().authenticated()
                 )
