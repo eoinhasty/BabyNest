@@ -1,6 +1,7 @@
 package com.assignment_two_starter.config;
 
 import com.assignment_two_starter.model.entities.Customer;
+import com.assignment_two_starter.model.entities.Role;
 import com.assignment_two_starter.model.services.CustomerService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,10 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -103,6 +101,10 @@ public class JwtUtil {
         Customer customer = customerService.getCustomerByEmail(username);
 
         Map<String, Object> claims = new HashMap<>();
+
+        if(customer.getRoles().isEmpty()) {
+            customer.setRoles(new HashSet<>(Collections.singletonList(new Role(1L, "CUSTOMER"))));
+        }
 
         List<String> roles = customerService.getAuthorities(customer.getRoles()).stream()
                 .map(GrantedAuthority::getAuthority)
