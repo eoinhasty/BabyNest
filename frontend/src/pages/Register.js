@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import '../css/Register.css';
+import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -7,9 +9,15 @@ function Register() {
         lastName: '',
         email: '',
         password: '',
+        phone: '',
     });
 
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    if(Cookies.get('jwt')) {
+        navigate('/');
+    }
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
@@ -22,11 +30,18 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (!passwordRegex.test(formData.password)) {
+            setError('Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.');
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:8888/api/customers/registerCustomer', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'  // Removed the charset=UTF-8 part
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData),
             });
@@ -41,6 +56,7 @@ function Register() {
                     password: '',
                 });
                 setError('');
+                navigate('/login');
             }
         } catch (error) {
             console.error('An error occurred during Registration:', error);
@@ -76,6 +92,19 @@ function Register() {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
+                        required
+                    />
+                </div>
+
+                <div className="register-input-wrapper">
+                    <label htmlFor="phone">Mobile Phone:</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        pattern={"^(08[356789])\\d{7}$"}
                         required
                     />
                 </div>
