@@ -8,5 +8,11 @@ successful authentication.
  */
 @Data
 public class AuthenticationResponse {
-    private final String jwt;
+    private String jwt;
+    private String message;
+
+    public AuthenticationResponse(String jwt, String message) {
+        this.jwt = jwt;
+        this.message = message;
+    }
 }
